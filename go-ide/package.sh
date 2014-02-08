@@ -43,8 +43,8 @@ function validate_go_sdk_location {
 
     pushd "${SOURCE_PATH_GO}" >/dev/null
     ACTUAL_RELEASE_TAG_GO=`hg identify -t`
-    if [ "${RELEASE_TAG_GO} release" != "${ACTUAL_RELEASE_TAG_GO}" ]; then
-        echo "Error: Go Source code is at the wrong tag: ${ACTUAL_RELEASE_TAG_GO}."
+    if [ "${RELEASE_TAG_GO}" != "${ACTUAL_RELEASE_TAG_GO}" ]; then
+        echo "Error: Go Source code is at the wrong tag: ${ACTUAL_RELEASE_TAG_GO} expected ${RELEASE_TAG_GO}."
         echo -e " Try this:"
         echo -e "\tpushd '${SOURCE_PATH_GO}' && hg pull && hg update --clean ${RELEASE_TAG_GO} && popd"
         exit 1
@@ -155,6 +155,7 @@ function extract_idea_community_build() {
         rm -rf "${SOURCE_PATH_IDEA_BUILT}"
     fi
 
+    mkdir "${SOURCE_PATH_IDEA_BUILT}"
     pushd "${FOLDER_DIST}" >/dev/null
     if [ "${TARGET_HOST}" == "linux" ]; then
 
@@ -166,12 +167,12 @@ function extract_idea_community_build() {
         mv ${FOLDER_DIST}/idea-IC-${IDEA_BUILD_VERSION} ${FOLDER_DIST}/idea-IC-${IDEA_BUILD_VERSION}-linux
     elif [ "${TARGET_HOST}" == "darwin" ]; then
 
-        if [ -d "${FOLDER_DIST}/Community Edition-IC-${IDEA_BUILD_VERSION}.app" ]; then
-            rm -rf "${FOLDER_DIST}/Community Edition-IC-${IDEA_BUILD_VERSION}.app"
+        if [ -d "${FOLDER_DIST}/idea-IC-${IDEA_BUILD_VERSION}.app" ]; then
+            rm -rf "${FOLDER_DIST}/idea-IC-${IDEA_BUILD_VERSION}.app"
         fi
 
         unzip "${SOURCE_PATH_IDEA}/out/artifacts/ideaIC-${IDEA_BUILD_VERSION}.mac.zip"
-        mv "${FOLDER_DIST}/IntelliJ IDEA 11 CE.app" "${SOURCE_PATH_IDEA_BUILT}"
+        mv "${FOLDER_DIST}/Community Edition-IC-${IDEA_BUILD_VERSION}.app" "${SOURCE_PATH_IDEA_BUILT}"
     elif [ "${TARGET_HOST}" == "windows" ]; then
         mkdir ${SOURCE_PATH_IDEA_BUILT}
         pushd ${SOURCE_PATH_IDEA_BUILT} >/dev/null
